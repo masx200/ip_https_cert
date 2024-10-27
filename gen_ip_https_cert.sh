@@ -18,6 +18,7 @@ openssl genrsa -out ca.key 2048
 # 生成公钥
 openssl req -new -x509 -days $days -key ca.key -out ca.crt -subj "//C=CN/C=CN/ST=BJ/L=SJS/O=GuFei/OU=dev/CN=jiehuo.com"
 
+# 创建 openssl.cnf 配置文件
 cat << EOF > openssl.cnf
 [req]
 distinguished_name = req_distinguished_name
@@ -47,7 +48,7 @@ subjectAltName = @alt_names
 IP.1 = $ip 
 EOF
 
-
+# 创建v3.ext文件
 cat << EOF > v3.ext 
 authorityKeyIdentifier=keyid,issuer
 basicConstraints=CA:FALSE
@@ -61,9 +62,9 @@ EOF
 openssl genrsa -out server.key 2048
 
 # 服务器证书公钥
-openssl req -new -days 3650 -key server.key -out server.csr -config openssl.cnf -subj //C=CN/C=CN/ST=BJ/L=SJS/O=GuFei/OU=dev/CN=jiehuo.com
+openssl req -new -days $days -key server.key -out server.csr -config openssl.cnf -subj //C=CN/C=CN/ST=BJ/L=SJS/O=GuFei/OU=dev/CN=jiehuo.com
 
 # 用自己的 CA 给自己的服务器签名
-openssl x509 -days 3650 -req -sha256 -extfile v3.ext -CA ca.crt -CAkey ca.key -CAcreateserial -in server.csr -out server.crt
+openssl x509 -days $days -req -sha256 -extfile v3.ext -CA ca.crt -CAkey ca.key -CAcreateserial -in server.csr -out server.crt
 
 rm {ca.key,ca.srl,server.csr,openssl.cnf,v3.ext}
