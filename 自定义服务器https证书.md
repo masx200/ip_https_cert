@@ -1,13 +1,4 @@
----
-title: 自定义https证书
-top: 0
-date: 2024-09-04 21:16:11
-tags:
-  - linux
-categories: linux
----
-
-# 1. 笔记
+# 1. 生成基于 IP 地址的 https 证书
 
 ## 1.1. 生成私钥
 
@@ -19,7 +10,6 @@ openssl genrsa -out ca.key 2048
 
 ```sh
 openssl req -new -x509 -days 3650 -key ca.key -out ca.crt
-
 ```
 
 ## 1.3. 创建 openssl.cnf 配置文件，只修改 alt_names 即可
@@ -48,7 +38,7 @@ keyUsage = nonRepudiation, digitalSignature, keyEncipherment
 subjectAltName = @alt_names
 
 [alt_names]
-IP.1 = 172.16.10.9
+IP.1 = 192.168.1.14
 ```
 
 ## 1.4. v3.ext 文件，只需要 alt_names 与上面的一致即可
@@ -59,7 +49,7 @@ basicConstraints=CA:FALSE
 keyUsage=digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
 subjectAltName=@alt_names
 [alt_names]
-IP.1 = 172.16.10.9
+IP.1 = 192.168.1.14
 ```
 
 ## 1.5. 服务器证书私钥
