@@ -64,7 +64,7 @@ openssl genrsa -out server.key 2048
 openssl req -new -days 3650 -key server.key -out server.csr -config openssl.cnf
 ```
 
-## 1.7. 用自己的 CA 给自己的服务器签名
+## 1.7. 用自己的 CA 给自己的服务器公钥签名
 
 ```sh
 openssl x509 -days 3650 -req -sha256 -extfile v3.ext -CA ca.crt -CAkey ca.key -CAcreateserial -in server.csr -out server.crt
